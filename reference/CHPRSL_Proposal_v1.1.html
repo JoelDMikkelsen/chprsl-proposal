@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CHPRSL × Fusion5: NetSuite Implementation Proposal</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet" />
+
+<style>
+/* ========== Fusion5 brand tokens ========== */
+:root {
+  --f5-violet: #3B1D4E;
+  --f5-coral: #FF5C39;
+  --f5-white: #FFFFFF;
+  --f5-jet: #3F3B42;
+  --f5-rose-tea: #A993B8;
+  --f5-camille-grey: #3A687E;
+  --f5-monarch-bay: #64ABB8;
+  --f5-wisterlight: #B7A6C4;
+  --f5-pale-vale: #DFDAE2;
+  --f5-aprica: #F47E5D;
+  --f5-russian-violet: #2B143B;
+  --f5-chinese-violet: #806E8A;
+  --f5-crimson-ziva: #B5452E;
+  --f5-bridlewater: #4A808A;
+  --f5-deep-harbor: #2B4F5E;
+
+  --f5-bg: var(--f5-white);
+  --f5-bg-subtle: #FAF8FB;
+  --f5-text: var(--f5-jet);
+  --f5-heading: var(--f5-violet);
+
+  --f5-gradient-warm: linear-gradient(135deg, var(--f5-coral) 0%, var(--f5-violet) 100%);
+  --f5-gradient-comet: linear-gradient(90deg, var(--f5-coral) 0%, var(--f5-coral) 8%, rgba(255,92,57,0.55) 55%, rgba(255,92,57,0) 100%);
+  --f5-gradient-hero: radial-gradient(ellipse at 20% 30%, rgba(255,92,57,0.28), transparent 45%),
+                      radial-gradient(ellipse at 85% 70%, rgba(169,147,184,0.22), transparent 50%),
+                      linear-gradient(135deg, var(--f5-russian-violet) 0%, var(--f5-violet) 60%, #4a2860 100%);
+
+  --f5-font-sans: "Plus Jakarta Sans", Calibri, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --f5-radius-sm: 6px;
+  --f5-radius-md: 12px;
+  --f5-radius-lg: 24px;
+  --f5-radius-xl: 36px;
+  --f5-radius-pill: 999px;
+
+  --f5-shadow-sm: 0 2px 6px rgba(59,29,78,0.08);
+  --f5-shadow-md: 0 8px 20px rgba(59,29,78,0.12);
+  --f5-shadow-lg: 0 20px 40px rgba(59,29,78,0.18);
+  --f5-shadow-coral: 0 8px 20px rgba(255,92,57,0.35);
+
+  --f5-border: rgba(63,59,66,0.15);
+  --f5-border-strong: rgba(59,29,78,0.4);
+}
+
+/* ========== Base ========== */
+* { box-sizing: border-box; }
+html { font-family: var(--f5-font-sans); color: var(--f5-text); background: var(--f5-bg); -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body { margin: 0; font-size: 16px; line-height: 1.6; }
+
+h1,h2,h3,h4,h5 { color: var(--f5-heading); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 0.5em; }
+h1 { font-size: clamp(2rem, 4vw, 2.75rem); }
+h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); }
+h3 { font-size: 1.375rem; font-weight: 600; }
+h4 { font-size: 1.125rem; font-weight: 600; }
+
+p { margin: 0 0 1em; }
+a { color: var(--f5-violet); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { color: var(--f5-crimson-ziva); }
+
+.eyebrow { font-size: 0.8125rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--f5-coral); margin-bottom: 0.75rem; display: block; }
+
+section { padding: 5rem 1.5rem; }
+.wrap { max-width: 1180px; margin: 0 auto; }
+.wrap-narrow { max-width: 880px; margin: 0 auto; }
+
+/* ========== Hero ========== */
+.hero { position: relative; padding: 7rem 1.5rem 6rem; background: var(--f5-gradient-hero); color: var(--f5-white); overflow: hidden; }
+.hero h1, .hero h2, .hero h3 { color: var(--f5-white); }
+.hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr 360px; gap: 3rem; align-items: center; }
+@media (max-width: 900px) { .hero-grid { grid-template-columns: 1fr; } }
+.hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; line-height: 1.05; margin-bottom: 1.25rem; }
+.hero h1 .accent { color: var(--f5-coral); }
+.hero .lede { font-size: 1.25rem; max-width: 620px; color: rgba(255,255,255,0.88); font-weight: 300; line-height: 1.5; }
+.hero .meta { display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 2rem; font-size: 0.875rem; color: rgba(255,255,255,0.7); }
+.hero .meta span { display: inline-flex; align-items: center; gap: 0.5rem; }
+.hero .meta span::before { content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--f5-coral); }
+
+/* Curved image / disc visual in hero */
+.hero-disc { position: relative; aspect-ratio: 1; width: 100%; max-width: 360px; justify-self: end; }
+.hero-disc .dot-violet { position: absolute; inset: 0; border-radius: 50%; background: var(--f5-violet); box-shadow: 0 0 60px rgba(255,92,57,0.4); }
+.hero-disc .dot-coral { position: absolute; width: 55%; height: 55%; right: -5%; bottom: -8%; border-radius: 50%; background: var(--f5-coral); box-shadow: var(--f5-shadow-coral); }
+.hero-disc .dot-rose { position: absolute; width: 28%; height: 28%; top: 12%; right: 18%; border-radius: 50%; background: var(--f5-rose-tea); opacity: 0.7; }
+
+/* Comet accent (reserved for future use; kept empty to avoid cutting across hero text) */
+
+/* ========== Stat bar ========== */
+.statbar { background: var(--f5-violet); color: var(--f5-white); padding: 2.5rem 1.5rem; }
+.statbar .stats { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+@media (max-width: 800px) { .statbar .stats { grid-template-columns: repeat(2, 1fr); } }
+.stat .num { font-size: 2.5rem; font-weight: 700; color: var(--f5-coral); line-height: 1; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+.stat .lab { font-size: 0.875rem; color: rgba(255,255,255,0.8); font-weight: 500; }
+
+/* ========== Sections ========== */
+.section-alt { background: var(--f5-bg-subtle); }
+.section-violet { background: var(--f5-violet); color: var(--f5-white); }
+.section-violet h1, .section-violet h2, .section-violet h3 { color: var(--f5-white); }
+.section-violet .eyebrow { color: var(--f5-coral); }
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+@media (max-width: 900px) { .two-col { grid-template-columns: 1fr; gap: 2rem; } }
+
+/* Cards */
+.card { background: var(--f5-white); border: 1px solid var(--f5-border); border-radius: var(--f5-radius-lg); padding: 1.75rem; box-shadow: var(--f5-shadow-sm); }
+.card h3 { color: var(--f5-violet); margin-bottom: 0.5rem; }
+.card .ico { width: 42px; height: 42px; border-radius: 10px; background: color-mix(in srgb, var(--f5-coral) 14%, transparent); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 1rem; color: var(--f5-coral); }
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+@media (max-width: 800px) { .grid-3 { grid-template-columns: 1fr; } }
+
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+@media (max-width: 800px) { .grid-2 { grid-template-columns: 1fr; } }
+
+/* Listening table */
+.listen-table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+.listen-table th, .listen-table td { text-align: left; padding: 1rem 1.25rem; border-bottom: 1px solid var(--f5-border); vertical-align: top; }
+.listen-table thead th { background: var(--f5-violet); color: var(--f5-white); font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.listen-table thead th:first-child { border-top-left-radius: 12px; }
+.listen-table thead th:last-child { border-top-right-radius: 12px; }
+.listen-table tbody tr:hover { background: var(--f5-bg-subtle); }
+.listen-table td:first-child { color: var(--f5-crimson-ziva); font-weight: 500; }
+
+/* Scope tables */
+.scope-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+@media (max-width: 800px) { .scope-grid { grid-template-columns: 1fr; } }
+.scope-block { background: var(--f5-white); border: 1px solid var(--f5-border); border-radius: var(--f5-radius-md); padding: 1.5rem; }
+.scope-block.out { background: var(--f5-bg-subtle); }
+.scope-block h4 { color: var(--f5-violet); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+.scope-block.out h4 { color: var(--f5-jet); }
+.scope-block h4 .pip { width: 10px; height: 10px; border-radius: 2px; background: var(--f5-coral); }
+.scope-block.out h4 .pip { background: var(--f5-chinese-violet); }
+.scope-block ul { list-style: none; padding: 0; margin: 0; }
+.scope-block li { padding: 0.4rem 0 0.4rem 1.5rem; position: relative; font-size: 0.9375rem; color: var(--f5-jet); }
+.scope-block li::before { content: ""; position: absolute; left: 0; top: 0.85rem; width: 12px; height: 2px; background: var(--f5-coral); border-radius: 1px; }
+.scope-block.out li::before { background: var(--f5-chinese-violet); }
+
+/* Phase timeline */
+.timeline { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 2rem; border-radius: var(--f5-radius-md); overflow: hidden; }
+@media (max-width: 800px) { .timeline { grid-template-columns: 1fr; } }
+.phase { background: var(--f5-white); border: 1px solid var(--f5-border); padding: 1.25rem; position: relative; }
+.phase:not(:last-child) { border-right: none; }
+@media (max-width: 800px) { .phase:not(:last-child) { border-right: 1px solid var(--f5-border); border-bottom: none; } }
+.phase-num { font-size: 0.75rem; color: var(--f5-coral); font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+.phase-name { color: var(--f5-violet); font-weight: 700; font-size: 1.125rem; margin: 0.3rem 0 0.5rem; }
+.phase-dur { font-size: 0.875rem; color: var(--f5-chinese-violet); }
+
+/* ========== Commercials configurator ========== */
+.configurator { background: var(--f5-bg-subtle); }
+.config-grid { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; margin-top: 2rem; align-items: start; }
+@media (max-width: 1000px) { .config-grid { grid-template-columns: 1fr; } }
+
+.config-panels { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.panel { background: var(--f5-white); border: 1px solid var(--f5-border); border-radius: var(--f5-radius-lg); overflow: hidden; }
+.panel-head { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--f5-border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.panel-head h3 { margin: 0; color: var(--f5-violet); }
+.panel-head .sub { font-size: 0.875rem; color: var(--f5-chinese-violet); }
+.panel-body { padding: 1.5rem; display: grid; gap: 1rem; }
+
+.row { display: grid; grid-template-columns: 1fr auto auto auto; gap: 0.75rem; align-items: center; padding: 0.75rem 0; border-bottom: 1px dashed var(--f5-border); }
+.row:last-child { border-bottom: none; }
+.row.total { grid-template-columns: 1fr auto; font-weight: 700; color: var(--f5-violet); border-top: 2px solid var(--f5-violet); border-bottom: none; padding-top: 1rem; margin-top: 0.5rem; font-size: 1.0625rem; }
+.row label { font-weight: 500; font-size: 0.9375rem; }
+.row .note { font-size: 0.75rem; color: var(--f5-chinese-violet); font-weight: 400; display: block; margin-top: 0.2rem; }
+
+.row input[type="number"], .row select {
+  border: 1px solid var(--f5-border); border-radius: var(--f5-radius-sm); padding: 0.4rem 0.55rem;
+  font-family: var(--f5-font-sans); font-size: 0.9375rem; color: var(--f5-jet); background: var(--f5-white);
+  min-width: 78px; text-align: right;
+}
+.row input[type="number"]:focus, .row select:focus { outline: 2px solid var(--f5-coral); outline-offset: 1px; border-color: var(--f5-coral); }
+.row select { min-width: 130px; text-align: left; }
+.row .unit { font-size: 0.8125rem; color: var(--f5-chinese-violet); text-align: right; min-width: 110px; }
+.row .line { font-weight: 600; text-align: right; min-width: 110px; color: var(--f5-violet); }
+
+.row .toggle { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; user-select: none; }
+.row .toggle input { width: 38px; height: 22px; appearance: none; background: var(--f5-wisterlight); border-radius: 999px; position: relative; cursor: pointer; transition: background 0.2s; }
+.row .toggle input::after { content: ""; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: left 0.2s; }
+.row .toggle input:checked { background: var(--f5-coral); }
+.row .toggle input:checked::after { left: 19px; }
+
+/* Totals panel (sticky on desktop) */
+.totals-panel { position: sticky; top: 1.5rem; background: var(--f5-violet); color: var(--f5-white); border-radius: var(--f5-radius-lg); padding: 1.75rem; box-shadow: var(--f5-shadow-lg); }
+.totals-panel h3 { color: var(--f5-white); margin-bottom: 0.25rem; }
+.totals-panel .sub { color: rgba(255,255,255,0.7); font-size: 0.875rem; margin-bottom: 1.25rem; }
+.totals-panel .total-line { display: flex; justify-content: space-between; gap: 1rem; padding: 0.65rem 0; border-bottom: 1px solid rgba(255,255,255,0.12); font-size: 0.9375rem; }
+.totals-panel .total-line:last-child { border-bottom: none; }
+.totals-panel .total-line .lab { color: rgba(255,255,255,0.85); }
+.totals-panel .total-line .val { font-weight: 600; }
+.totals-panel .grand { margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--f5-coral); font-size: 1.125rem; font-weight: 700; }
+.totals-panel .grand .val { color: var(--f5-coral); font-size: 1.5rem; letter-spacing: -0.02em; }
+.totals-panel .fine { margin-top: 1.25rem; font-size: 0.75rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+
+/* Callout / pill */
+.pill { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: color-mix(in srgb, var(--f5-coral) 14%, transparent); color: var(--f5-crimson-ziva); border-radius: 999px; font-size: 0.8125rem; font-weight: 600; }
+.pill.violet { background: color-mix(in srgb, var(--f5-violet) 12%, transparent); color: var(--f5-violet); }
+.pill.teal { background: color-mix(in srgb, var(--f5-monarch-bay) 18%, transparent); color: var(--f5-deep-harbor); }
+
+.callout { background: var(--f5-violet); color: var(--f5-white); border-radius: var(--f5-radius-lg); padding: 2rem 2.5rem; position: relative; overflow: hidden; }
+.callout h3 { color: var(--f5-white); margin-bottom: 0.75rem; }
+.callout .comet-bg { position: absolute; right: -10%; top: -20%; width: 60%; height: 140%; background: var(--f5-gradient-comet); opacity: 0.25; transform: rotate(-20deg); border-radius: 999px; }
+
+/* Footer CTA */
+.cta { background: var(--f5-gradient-warm); color: var(--f5-white); padding: 4rem 1.5rem; text-align: center; }
+.cta h2 { color: var(--f5-white); }
+.cta .btn { display: inline-block; margin-top: 1.25rem; padding: 0.9rem 1.75rem; background: var(--f5-white); color: var(--f5-violet); text-decoration: none; font-weight: 700; border-radius: 999px; box-shadow: var(--f5-shadow-md); transition: transform 0.15s; }
+.cta .btn:hover { transform: translateY(-2px); color: var(--f5-crimson-ziva); }
+
+/* Footer */
+.foot { padding: 2.5rem 1.5rem; text-align: center; font-size: 0.8125rem; color: var(--f5-chinese-violet); background: var(--f5-bg-subtle); }
+
+/* Print */
+@media print {
+  .hero-disc, .comet, .totals-panel { display: none; }
+  section { padding: 2rem 1rem; }
+  .config-grid { grid-template-columns: 1fr; }
+  .panel { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-grid wrap">
+    <div>
+      <span class="eyebrow">Together, let's go beyond</span>
+      <h1>Canterbury-Hurlstone Park RSL Club <span class="accent">×</span> Fusion5</h1>
+      <p class="lede">Twelve entities consolidate into one NetSuite ledger. Three specialised vendors deliver procurement, fixed assets, and corporate cards. Fixed-price implementation, committed to 1 July 2026.</p>
+      <div class="meta">
+        <span>Version 1.1</span>
+        <span>April 2026</span>
+        <span>Target go-live 1 July 2026</span>
+        <span>Fixed-price engagement</span>
+        <span>Pricing valid until 31 May 2026</span>
+      </div>
+    </div>
+    <div class="hero-disc" aria-hidden="true">
+      <div class="dot-violet"></div>
+      <div class="dot-rose"></div>
+      <div class="dot-coral"></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STAT BAR ===== -->
+<div class="statbar">
+  <div class="stats">
+    <div class="stat"><div class="num">12</div><div class="lab">Entities consolidated into one group ledger</div></div>
+    <div class="stat"><div class="num">$165K</div><div class="lab">Fixed-price NetSuite implementation</div></div>
+    <div class="stat"><div class="num">1 Jul</div><div class="lab">Committed go-live, 2026</div></div>
+    <div class="stat"><div class="num">0</div><div class="lab">NetSuite user licences for ~40–50 procurement users</div></div>
+  </div>
+</div>
+
+<!-- ===== WHAT WE HEARD ===== -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">What we heard</span>
+    <h2>v1.1 resolves six decisions the Finance team raised on v1.0</h2>
+    <p class="wrap-narrow" style="margin-left:0;max-width:760px;">Each change below traces to a specific question raised since v1.0.</p>
+
+    <table class="listen-table">
+      <thead>
+        <tr><th style="width:42%">You raised</th><th>We responded in v1.1</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>40–50 users buying General Access licences for PO creation and goods receipting "would kill us commercially"</td>
+          <td>Procurement moved end-to-end into <strong>Zudello</strong>. No per-user charges: all staff are covered regardless of volume.</td>
+        </tr>
+        <tr>
+          <td>"Not convinced" native NetSuite expense management matches purpose-built tools; raised Revolut as a cheaper, better alternative</td>
+          <td>Revolut <strong>confirmed for Phase 1</strong> corporate card and expense management. Vendor-supplied integration, no Fusion5 build effort.</td>
+        </tr>
+        <tr>
+          <td>Job costing asked three times: "is native enough, or do we need more features?"</td>
+          <td>A single recommendation: <strong>native custom segment</strong>. No additional licensing. Covers capital projects, events P&amp;L and campaign tracking.</td>
+        </tr>
+        <tr>
+          <td>"Lot of extra spending we've never had before": caution on accumulating module costs</td>
+          <td>ARM and middleware <strong>deferred to Phase 2</strong>; NetAsset replaces native Fixed Assets for a better-fit, lower-cost Phase 1.</td>
+        </tr>
+        <tr>
+          <td>Procure-to-pay fragmentation: "there are so many options"</td>
+          <td>One platform, end-to-end, in Zudello: supplier onboarding, POs, receipting, 3-way matching, AP capture, DOA approvals and budget-vs-spend. Mediusflow decommissioned.</td>
+        </tr>
+        <tr>
+          <td>Contract management scoped with BC; equivalent capability expected</td>
+          <td>Native custom record with owner, renewal dates, document attachment and SuiteFlow approval routing. Accessible to View &amp; Approve users, so no extra GA licences for contract owners.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ===== SOLUTION OVERVIEW ===== -->
+<section class="section-alt">
+  <div class="wrap">
+    <span class="eyebrow">The solution stack</span>
+    <h2>NetSuite handles consolidation; three vendors handle the rest</h2>
+    <p style="max-width:760px">NetSuite is the accounting and analytics consolidation layer. Zudello delivers procure-to-pay. NetGain delivers fixed assets. Revolut delivers corporate cards and staff expenses. Each vendor supplies its own integration and is licensed separately; the configurator below shows every line.</p>
+
+    <div class="grid-3" style="margin-top: 2rem;">
+      <div class="card">
+        <div class="ico">◎</div>
+        <h3>NetSuite ERP</h3>
+        <p><strong>SuiteSuccess Financials First Standard</strong>. Multi-entity consolidation, GL, AP/AR, banking, fixed-asset ledger, reporting. Native AI (MCP, exception management, NetSuite Expert) included at no extra cost.</p>
+      </div>
+      <div class="card">
+        <div class="ico">↔</div>
+        <h3>Zudello</h3>
+        <p>End-to-end <strong>procure-to-pay</strong>: supplier onboarding, POs, goods receipting, 3-way matching, AP capture, DOA approvals, budget-vs-spend. No per-user charges. Vendor-supplied NetSuite integration.</p>
+      </div>
+      <div class="card">
+        <div class="ico">◈</div>
+        <h3>NetAsset</h3>
+        <p>NetGain SuiteApp for <strong>fixed-asset management</strong>. Runs inside NetSuite, so no integration build is required. Replaces native NetSuite Fixed Assets; sized to the ~3,000-asset register consolidated across all group entities.</p>
+      </div>
+      <div class="card">
+        <div class="ico">◢</div>
+        <h3>Revolut</h3>
+        <p><strong>Corporate card + expense management</strong>. Vendor-supplied API integration into NetSuite. Retains the UX your team already likes; removes manual corporate-card tracking entirely.</p>
+      </div>
+      <div class="card">
+        <div class="ico">▶</div>
+        <h3>Fusion5 CSV Integrator</h3>
+        <p>Scheduled flat-file ingestion for <strong>SwiftPOS, Concilio, Micropay</strong> summary journals. Eliminates manual journal entry; provides a consistent, auditable data path into the ERP.</p>
+      </div>
+      <div class="card">
+        <div class="ico">✉</div>
+        <h3>Fusion5 Bank Parser</h3>
+        <p><strong>ABA file generation</strong> from approved NetSuite payment runs. The outbound payment cycle is auditable end-to-end within NetSuite. Advanced Electronic Bank Payments handles the inbound bank feeds.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SCOPE ===== -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Phase 1 scope</span>
+    <h2>Phase 1 delivers consolidation; Phase 2 items remain visible in the roadmap</h2>
+    <p style="max-width:760px">Phase 1 is sized to hit 1 July 2026. Items that are not required for consolidation and close are deferred to Phase 2 and listed alongside the in-scope items below.</p>
+
+    <div class="scope-grid">
+      <div class="scope-block">
+        <h4><span class="pip"></span> In scope for Phase 1</h4>
+        <ul>
+          <li>General Ledger across 12 entities + consolidated reporting</li>
+          <li>Multi-entity subsidiary management &amp; intercompany netting</li>
+          <li>Accounts Payable (bills flow from Zudello into NetSuite)</li>
+          <li>Accounts Receivable &amp; cash application</li>
+          <li>Advanced Electronic Bank Payments (inbound + outbound ABA)</li>
+          <li>Fixed Assets via <strong>NetAsset</strong>: ~3,000 assets, single depreciation schedule, low-value pool</li>
+          <li>Procurement end-to-end in <strong>Zudello</strong> (no NetSuite GA licences for receipters)</li>
+          <li>Corporate card &amp; expense via <strong>Revolut</strong> integration</li>
+          <li>Job costing via native custom segment (capital, events, marketing)</li>
+          <li>Contract Management: custom record plus SuiteFlow approvals</li>
+          <li>Vendor Bank Details Approval Workflow</li>
+          <li>Journal Approval Workflow (manual journals)</li>
+          <li>SuiteAnalytics BI dashboards &amp; Financial Report Builder</li>
+          <li>Integrations: SwiftPOS, Concilio, Micropay (via CSV Integrator)</li>
+          <li>Data migration: opening balances + master data</li>
+          <li>Training (End-User Essentials + Admin Essentials)</li>
+        </ul>
+      </div>
+      <div class="scope-block out">
+        <h4><span class="pip"></span> Deferred to Phase 2</h4>
+        <ul>
+          <li>NetSuite EPM: Planning &amp; Budgeting</li>
+          <li>Advanced Revenue Management (spreadsheets continue in Phase 1)</li>
+          <li>NetSuite Analytics Warehouse</li>
+          <li>Middleware / message bus for Phase 2 architecture</li>
+          <li>Field Service Management &amp; CMMS (separate evaluation in flight)</li>
+          <li>Inventory management in NetSuite (remains in SwiftPOS)</li>
+          <li>HR &amp; Payroll in NetSuite (decision pending)</li>
+          <li>CRM / marketing automation</li>
+          <li>Custom SuiteScript development</li>
+          <li>Gaming-specific direct integrations (flow via Concilio)</li>
+          <li>Post-live managed services (separate PartnerPlus engagement)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== IMPLEMENTATION APPROACH ===== -->
+<section class="section-violet">
+  <div class="wrap">
+    <span class="eyebrow">Delivery approach</span>
+    <h2>Five-phase Prince2-aligned FOCUS delivery, stage-gated to 1 July 2026</h2>
+    <p style="max-width:780px;color:rgba(255,255,255,0.85)">Fixed-price implementation. Variations captured formally at each stage gate. Target go-live 1 July 2026, committed by Fusion5.</p>
+
+    <div class="timeline">
+      <div class="phase"><div class="phase-num">01</div><div class="phase-name">Initiate</div><div class="phase-dur">Mobilisation, kick-off, governance</div></div>
+      <div class="phase"><div class="phase-num">02</div><div class="phase-name">Design</div><div class="phase-dur">Workshops, functional &amp; technical design</div></div>
+      <div class="phase"><div class="phase-num">03</div><div class="phase-name">Build</div><div class="phase-dur">Sprint-based configuration &amp; QA</div></div>
+      <div class="phase"><div class="phase-num">04</div><div class="phase-name">Test</div><div class="phase-dur">UAT, data migration, sign-off</div></div>
+      <div class="phase"><div class="phase-num">05</div><div class="phase-name">Deploy</div><div class="phase-dur">Go-live, training, hypercare</div></div>
+    </div>
+
+    <div style="margin-top: 2.5rem; display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem;">
+      <div>
+        <h4 style="color:var(--f5-coral);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.08em">Governance</h4>
+        <p style="color:rgba(255,255,255,0.9);font-size:0.9375rem">Weekly RAG status; weekly joint project meetings; monthly Steering Committee with Brendan McDowell. Formal stage gates at each phase boundary.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--f5-coral);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.08em">Commercial model</h4>
+        <p style="color:rgba(255,255,255,0.9);font-size:0.9375rem">Fixed-price implementation. Variations are managed as formal change requests with impact assessment at each stage boundary.</p>
+      </div>
+      <div>
+        <h4 style="color:var(--f5-coral);font-size:0.875rem;text-transform:uppercase;letter-spacing:0.08em">Risk response</h4>
+        <p style="color:rgba(255,255,255,0.9);font-size:0.9375rem">The multi-vendor architecture routes integration build effort to the vendors who own each platform. Vendor delivery status is tracked in weekly project governance. Commercial terms are aligned to the go-live date where possible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONFIGURATOR ===== -->
+<section class="configurator" id="commercials">
+  <div class="wrap">
+    <span class="eyebrow">Live commercials configurator</span>
+    <h2>Model licence volumes and vendor tiers; the totals update live</h2>
+    <p style="max-width:780px">The panels below cover NetSuite licensing at Oracle list pricing (with the 49.95% discount applied and subject to final approval), Fusion5 Optional Connectors, Zudello, NetAsset and the Fusion5 implementation. Annual totals, one-off implementation and indicative 5-year TCO update as inputs change. Pricing is valid until 31 May 2026 unless extended by agreement.</p>
+
+    <div class="config-grid">
+      <div class="config-panels">
+
+        <!-- NETSUITE PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>NetSuite licensing</h3>
+              <div class="sub">SuiteSuccess Financials First Standard Edition at list pricing in AUD. 49.95% discount applied, subject to final approval. Platform, sandbox and training are fixed; user licences are configurable. Payment cadence can be annual, quarterly or monthly at CHPRSL's preference with no change to pricing.</div>
+            </div>
+            <span class="pill violet">Annual</span>
+          </div>
+          <div class="panel-body">
+
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--f5-chinese-violet);font-weight:700;margin:0.25rem 0 -0.25rem">Platform and environment (fixed)</div>
+
+            <div class="row">
+              <label>SuiteSuccess Financials First Standard Edition <span class="note">Core ERP &amp; CRM, Subsidiary Management, Financial Management, Advanced Electronic Bank Payments, SuiteAnalytics BI</span></label>
+              <span></span>
+              <span class="unit">1 × $2,850 / mo</span>
+              <span class="line">$34,200</span>
+            </div>
+
+            <div class="row">
+              <label>Sandbox Account <span class="note">Development and testing environment</span></label>
+              <span></span>
+              <span class="unit">1 × $750 / mo</span>
+              <span class="line">$9,000</span>
+            </div>
+
+            <div class="row">
+              <label>Company LCS Training Pass (Standard) <span class="note">NetSuite learning platform</span></label>
+              <span></span>
+              <span class="unit">1 × $600 / mo</span>
+              <span class="line">$7,200</span>
+            </div>
+
+            <div style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--f5-chinese-violet);font-weight:700;margin:1rem 0 -0.25rem">User licences (configurable)</div>
+
+            <div class="row">
+              <label>General Access Users <span class="note">$180 / mo each. v1.1 scope: 5 finance plus 1 IT Admin. <span id="ns-ga-note">Currently 6 of the 30 cap.</span></span></label>
+              <input type="number" id="ns-ga-qty" value="6" min="0" max="30" step="1" />
+              <span class="unit">× $2,160 / yr</span>
+              <span class="line" id="ns-ga-line">$12,960</span>
+            </div>
+
+            <div class="row">
+              <label>View &amp; Approve Users (5-Pk) <span class="note">$230 / mo per 5-pack, 12-month term. v1.1 scope: 16 users (7 bank authorisers and 9 dashboard viewers). <span id="ns-va-note">Currently 4 packs = 20 licences; 4 spare above the 16-user scope.</span></span></label>
+              <input type="number" id="ns-va-qty" value="4" min="0" max="20" step="1" />
+              <span class="unit">× $2,760 / yr</span>
+              <span class="line" id="ns-va-line">$11,040</span>
+            </div>
+
+            <div class="row">
+              <label>Specialised Site Operator <span class="note">$90 / mo each. Evaluated and ruled out in v1.1 in favour of View &amp; Approve, but available here to model.</span></label>
+              <input type="number" id="ns-so-qty" value="0" min="0" max="50" step="1" />
+              <span class="unit">× $1,080 / yr</span>
+              <span class="line" id="ns-so-line">$0</span>
+            </div>
+
+            <div class="row">
+              <label>Specialised CRM <span class="note">$130 / mo each. CRM is bundled in the core, so typically 0 for CHPRSL.</span></label>
+              <input type="number" id="ns-crm-qty" value="0" min="0" max="50" step="1" />
+              <span class="unit">× $1,560 / yr</span>
+              <span class="line" id="ns-crm-line">$0</span>
+            </div>
+
+            <div class="row">
+              <label>Specialised Project Manager <span class="note">$90 / mo each. Not in CHPRSL Phase 1 scope.</span></label>
+              <input type="number" id="ns-pm-qty" value="0" min="0" max="50" step="1" />
+              <span class="unit">× $1,080 / yr</span>
+              <span class="line" id="ns-pm-line">$0</span>
+            </div>
+
+            <div class="row">
+              <label>Specialised WMS <span class="note">$140 / mo each. Not in CHPRSL Phase 1 scope.</span></label>
+              <input type="number" id="ns-wms-qty" value="0" min="0" max="50" step="1" />
+              <span class="unit">× $1,680 / yr</span>
+              <span class="line" id="ns-wms-line">$0</span>
+            </div>
+
+            <div class="row">
+              <label>Employee Self-Service (5-Pk) <span class="note">Included in core at no additional cost.</span></label>
+              <span></span>
+              <span class="unit">1 × included</span>
+              <span class="line">$0</span>
+            </div>
+
+            <div class="row" style="border-top:2px solid var(--f5-border);margin-top:0.5rem;padding-top:1rem">
+              <label>Subtotal at list pricing</label>
+              <span></span>
+              <span class="unit"></span>
+              <span class="line" id="ns-list-subtotal">$74,400</span>
+            </div>
+
+            <div class="row">
+              <label style="color:var(--f5-crimson-ziva)">Less 49.95% discount <span class="note">Subject to final approval. Applied to the NetSuite lines above.</span></label>
+              <span></span>
+              <span class="unit"></span>
+              <span class="line" id="ns-discount-line" style="color:var(--f5-crimson-ziva)">−$37,163</span>
+            </div>
+
+            <div class="row total">
+              <label>NetSuite annual licensing (net)</label>
+              <span id="ns-annual-total">$37,237</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FUSION5 OPTIONAL CONNECTORS PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>Fusion5 Optional Connectors</h3>
+              <div class="sub">Bank Parser and CSV Connector, both in Phase 1 scope.</div>
+            </div>
+            <span class="pill">Annual</span>
+          </div>
+          <div class="panel-body">
+
+            <div class="row">
+              <label>Fusion5 Bank Parser (Outbound) <span class="note">ABA file generation from NetSuite payment runs</span></label>
+              <span></span>
+              <span class="unit">1 × $100 / mo</span>
+              <span class="line">$1,200</span>
+            </div>
+
+            <div class="row">
+              <label>Fusion5 CSV Connector <span class="note">Scheduled flat-file ingestion for SwiftPOS, Concilio and Micropay summary journals</span></label>
+              <span></span>
+              <span class="unit">1 × $208 / mo</span>
+              <span class="line">$2,500</span>
+            </div>
+
+            <div class="row total">
+              <label>Fusion5 Optional Connectors annual</label>
+              <span>$3,700</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ZUDELLO PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>Zudello: P2P platform</h3>
+              <div class="sub">Vendor-direct, AUD. No per-user charges. Implementation is a one-off.</div>
+            </div>
+            <span class="pill">Vendor-direct</span>
+          </div>
+          <div class="panel-body">
+
+            <div class="row">
+              <label>Document volume tier <span class="note">Any record regardless of size, including POs, item receipts and bills. Fair use allowance is 50 documents per month of overage. Unextracted documents are excluded under the extraction guarantee.</span></label>
+              <select id="z-tier">
+                <option value="500" data-yearly="5940">500 / month ($5,940/yr)</option>
+                <option value="1000" data-yearly="11400">1,000 / month ($11,400/yr)</option>
+                <option value="1500" data-yearly="16740">1,500 / month ($16,740/yr)</option>
+              </select>
+              <span class="unit">annual</span>
+              <span class="line" id="z-base-line">$5,940</span>
+            </div>
+
+            <div class="row">
+              <label>Budget checking <span class="note">Real-time budget-vs-spend at commitment. <span id="z-budget-note">+10% licence uplift (+$594 on the 500-doc tier), plus $2,100 one-off implementation.</span></span></label>
+              <span class="toggle"><input type="checkbox" id="z-budget" checked /></span>
+              <span class="unit">+10% licence</span>
+              <span class="line" id="z-budget-line">$594</span>
+            </div>
+
+            <div class="row">
+              <label>Vendor onboarding module <span class="note">$99/month flat; required for supplier onboarding workflows</span></label>
+              <span class="toggle"><input type="checkbox" id="z-vendor" checked /></span>
+              <span class="unit">$99 × 12</span>
+              <span class="line" id="z-vendor-line">$1,188</span>
+            </div>
+
+            <div class="row total">
+              <label>Zudello annual licensing</label>
+              <span id="z-annual-total">$7,722</span>
+            </div>
+
+            <div class="row" style="border-top:1px dashed var(--f5-border);padding-top:0.9rem;margin-top:0.25rem">
+              <label>Zudello implementation (one-off) <span class="note">AP + Procurement setup by Zudello Professional Services. +$2,100 if budget checking is selected.</span></label>
+              <span></span>
+              <span class="unit">Zudello PS</span>
+              <span class="line" id="z-impl-line">$17,100</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- NETASSET PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>NetAsset by NetGain</h3>
+              <div class="sub">SuiteApp running inside NetSuite; no integration build. Implementation included in Fusion5's fixed price.</div>
+            </div>
+            <span class="pill teal">Per-asset tier</span>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <label>Asset tier <span class="note">Indicative asset count: ~3,000, consolidated across all group entities (clean-up required pre-cutover). Tier selected is the first row at or above the count.</span></label>
+              <select id="na-tier">
+                <optgroup label="Tier 1">
+                  <option value="7332">500 assets ($7,332)</option>
+                  <option value="8460">1,000 assets ($8,460)</option>
+                  <option value="9588">1,500 assets ($9,588)</option>
+                </optgroup>
+                <optgroup label="Tier 2">
+                  <option value="10152">2,000 assets ($10,152)</option>
+                  <option value="11562">2,750 assets ($11,562)</option>
+                  <option value="12972" selected>3,500 assets ($12,972)</option>
+                  <option value="14382">4,250 assets ($14,382)</option>
+                </optgroup>
+                <optgroup label="Tier 3">
+                  <option value="19740">5,000 assets ($19,740)</option>
+                  <option value="21432">6,000 assets ($21,432)</option>
+                  <option value="23124">7,000 assets ($23,124)</option>
+                  <option value="24816">8,000 assets ($24,816)</option>
+                  <option value="26508">9,000 assets ($26,508)</option>
+                </optgroup>
+                <optgroup label="Tier 4">
+                  <option value="28200">10,000 assets ($28,200)</option>
+                  <option value="31302">12,500 assets ($31,302)</option>
+                  <option value="34404">15,000 assets ($34,404)</option>
+                  <option value="37506">17,500 assets ($37,506)</option>
+                  <option value="40608">20,000 assets ($40,608)</option>
+                  <option value="43710">22,500 assets ($43,710)</option>
+                  <option value="46812">25,000 assets ($46,812)</option>
+                  <option value="49914">27,500 assets ($49,914)</option>
+                  <option value="53016">30,000 assets ($53,016)</option>
+                </optgroup>
+              </select>
+              <span class="unit">annual</span>
+              <span class="line" id="na-line">$12,972</span>
+            </div>
+            <div class="row total">
+              <label>NetAsset annual licensing</label>
+              <span id="na-annual-total">$12,972</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- FUSION5 IMPL PANEL -->
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3>Fusion5 implementation</h3>
+              <div class="sub">Fixed price. Covers NetSuite configuration, customisations, integrations, data migration, NetAsset setup, training, and go-live support.</div>
+            </div>
+            <span class="pill">Fixed-price</span>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <label>NetSuite implementation <span class="note">Includes NetAsset implementation (SuiteApp, no integration). Variations managed formally.</span></label>
+              <span></span>
+              <span class="unit">one-off</span>
+              <span class="line" style="color:var(--f5-coral)">$165,000</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- TOTALS PANEL -->
+      <aside>
+        <div class="totals-panel">
+          <h3>Your cost picture</h3>
+          <div class="sub">Live; updates as inputs change</div>
+
+          <div class="total-line"><span class="lab">NetSuite licence (net)</span><span class="val" id="t-ns">$37,237</span></div>
+          <div class="total-line"><span class="lab">Fusion5 Optional Connectors</span><span class="val">$3,700</span></div>
+          <div class="total-line"><span class="lab">Zudello licence</span><span class="val" id="t-z">$7,722</span></div>
+          <div class="total-line"><span class="lab">NetAsset licence</span><span class="val" id="t-na">$12,972</span></div>
+          <div class="total-line"><span class="lab">Revolut</span><span class="val">TBC</span></div>
+          <div class="total-line"><span class="lab"><strong>Total annual (Year 1)</strong></span><span class="val" id="t-annual">$61,631</span></div>
+
+          <div class="total-line" style="margin-top:0.75rem"><span class="lab">Fusion5 implementation</span><span class="val">$165,000</span></div>
+          <div class="total-line"><span class="lab">Zudello implementation</span><span class="val" id="t-z-impl">$17,100</span></div>
+          <div class="total-line"><span class="lab"><strong>Total one-off</strong></span><span class="val" id="t-oneoff">$182,100</span></div>
+
+          <div class="grand">
+            <div class="total-line" style="border:none;padding:0"><span class="lab">Year 1 total</span><span class="val" id="t-y1">$243,731</span></div>
+          </div>
+          <div class="total-line" style="margin-top:0.5rem"><span class="lab">Indicative 5-year TCO</span><span class="val" id="t-5yr"></span></div>
+
+          <p class="fine">All figures AUD, excluding GST. NetSuite list pricing per Oracle rate card; 49.95% discount subject to final approval. The 5-year TCO assumes flat annual licences in years 2 and 3, with a 3% uplift in years 4 and 5, consistent with the published NetSuite renewal structure. Revolut plan tier to be confirmed by CHPRSL. Pricing valid until 31 May 2026 unless extended by agreement.</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CALLOUT ===== -->
+<section class="section-alt">
+  <div class="wrap">
+    <div class="callout">
+      <div class="comet-bg"></div>
+      <div style="position:relative;z-index:2;max-width:760px">
+        <span class="eyebrow" style="color:var(--f5-coral)">Commercial summary</span>
+        <h3>The Fusion5 implementation is fixed at $165,000; vendor licensing runs direct with Zudello, NetGain and Revolut and is modelled line-by-line in the configurator.</h3>
+        <p style="color:rgba(255,255,255,0.88)">Zudello's licensing model is transaction-based, so the users who approve payments, raise POs or receipt goods access the platform without adding to the cost line. NetAsset is priced per asset, with the tier sized to the consolidated register across all group entities. Variations on the Fusion5 implementation are managed as formal change requests.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NEXT STEPS ===== -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow">Next steps</span>
+    <h2>Two confirmations this week take us to Statement of Work</h2>
+    <div class="grid-2" style="margin-top:1.5rem">
+      <div class="card">
+        <h4>This week</h4>
+        <ul style="padding-left:1.1rem;color:var(--f5-jet)">
+          <li>Board paper finalisation (Brendan McDowell)</li>
+          <li>Zudello demo this week; CHPRSL to make the final platform decision on the back of it</li>
+          <li>Revolut plan tier confirmation with account manager</li>
+          <li>Asset register clean-up planning ahead of NetAsset migration</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>On approval</h4>
+        <ul style="padding-left:1.1rem;color:var(--f5-jet)">
+          <li>Statement of Work execution</li>
+          <li>Kick-off &amp; Initiate phase (week 1–2)</li>
+          <li>Design workshops including Zudello data-sync decision</li>
+          <li>Formal NetSuite database tier assessment</li>
+          <li>Go-live on 1 July 2026</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta">
+  <span class="eyebrow" style="color:white;opacity:0.8">On approval</span>
+  <h2>Together, let's go beyond.</h2>
+  <p style="max-width:640px;margin:0 auto;opacity:0.9">Once the scope and commercial are approved, the programme mobilises to 1 July 2026.</p>
+  <a class="btn" href="mailto:joel.mikkelsen@fusion5.com.au?subject=CHPRSL%20Proposal%20v1.1%20approval">Confirm approval</a>
+</section>
+
+<footer class="foot">
+  Prepared by Fusion5 for Canterbury-Hurlstone Park RSL Club Ltd · April 2026 · v1.1<br>
+  All figures AUD, excluding GST. Commercial details subject to formal SOW execution. Pricing valid until 31 May 2026 unless extended by agreement.
+</footer>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const fmt = n => '$' + Math.round(n).toLocaleString('en-AU');
+
+  // NetSuite fixed lines (annual, AUD, list pricing)
+  const NS_FIXED = {
+    platform: 34200,   // SuiteSuccess Financials First Standard Edition: $2,850 / mo
+    sandbox: 9000,     // Sandbox: $750 / mo
+    training: 7200     // LCS Training Pass: $600 / mo
+  };
+
+  // NetSuite user licence annual unit prices (AUD, list)
+  const NS_UNIT = {
+    ga: 180 * 12,      // $2,160 / yr : General Access
+    va: 230 * 12,      // $2,760 / yr : View & Approve 5-Pk
+    so: 90 * 12,       // $1,080 / yr : Specialised Site Operator
+    crm: 130 * 12,     // $1,560 / yr : Specialised CRM
+    pm: 90 * 12,       // $1,080 / yr : Specialised Project Manager
+    wms: 140 * 12      // $1,680 / yr : Specialised WMS
+  };
+
+  const NS_DISCOUNT = 0.4995;  // 49.95%, subject to final approval
+  const F5_CONNECTORS_ANNUAL = 1200 + 2500; // Bank Parser + CSV Connector
+  const FUSION5_IMPL = 165000;
+
+  const userQtyIds = ['ga','va','so','crm','pm','wms'];
+
+  function recalc() {
+    // NetSuite user licence lines
+    const qty = {};
+    userQtyIds.forEach(k => {
+      const raw = +$('ns-' + k + '-qty').value || 0;
+      const cap = k === 'ga' ? 30 : 50;
+      qty[k] = Math.min(cap, Math.max(0, raw));
+    });
+
+    const userLines = {};
+    let userTotal = 0;
+    userQtyIds.forEach(k => {
+      userLines[k] = qty[k] * NS_UNIT[k];
+      userTotal += userLines[k];
+      $('ns-' + k + '-line').textContent = fmt(userLines[k]);
+    });
+
+    const fixedTotal = NS_FIXED.platform + NS_FIXED.sandbox + NS_FIXED.training;
+    const nsListSubtotal = fixedTotal + userTotal;
+    const nsDiscount = nsListSubtotal * NS_DISCOUNT;
+    const nsAnnualNet = nsListSubtotal - nsDiscount;
+
+    $('ns-list-subtotal').textContent = fmt(nsListSubtotal);
+    $('ns-discount-line').textContent = '−' + fmt(nsDiscount);
+    $('ns-annual-total').textContent = fmt(nsAnnualNet);
+
+    // Dynamic note: General Access headroom against the 30 cap
+    $('ns-ga-note').textContent = 'Currently ' + qty.ga + ' of the 30 cap.';
+
+    // Dynamic note: View & Approve pack-to-licence conversion against the 16-user v1.1 scope
+    const vaPacks = qty.va;
+    const vaLicences = vaPacks * 5;
+    const vaTarget = 16;
+    let vaTail;
+    if (vaPacks === 0) {
+      vaTail = 'No packs selected; the 16-user scope is not covered.';
+    } else if (vaLicences < vaTarget) {
+      vaTail = 'Currently ' + vaPacks + (vaPacks === 1 ? ' pack = ' : ' packs = ') + vaLicences + ' licences; ' + (vaTarget - vaLicences) + ' short of the 16-user scope.';
+    } else if (vaLicences === vaTarget) {
+      vaTail = 'Currently ' + vaPacks + (vaPacks === 1 ? ' pack = ' : ' packs = ') + vaLicences + ' licences; covers the 16-user scope exactly.';
+    } else {
+      vaTail = 'Currently ' + vaPacks + (vaPacks === 1 ? ' pack = ' : ' packs = ') + vaLicences + ' licences; ' + (vaLicences - vaTarget) + ' spare above the 16-user scope.';
+    }
+    $('ns-va-note').textContent = vaTail;
+
+    // Zudello
+    const zTierEl = $('z-tier');
+    const zOpt = zTierEl.options[zTierEl.selectedIndex];
+    const zBase = +zOpt.dataset.yearly || 0;
+    const zBudgetActive = $('z-budget').checked;
+    const zVendorActive = $('z-vendor').checked;
+    const zBudgetLicence = zBudgetActive ? zBase * 0.10 : 0;
+    const zVendorFee = zVendorActive ? 1188 : 0;
+    const zAnnual = zBase + zBudgetLicence + zVendorFee;
+    const zImpl = 15000 + (zBudgetActive ? 2100 : 0);
+
+    $('z-base-line').textContent = fmt(zBase);
+    $('z-budget-line').textContent = fmt(zBudgetLicence);
+    $('z-vendor-line').textContent = fmt(zVendorFee);
+    $('z-annual-total').textContent = fmt(zAnnual);
+    $('z-impl-line').textContent = fmt(zImpl);
+
+    // Dynamic note: budget check dollar uplift scales with the selected doc tier
+    const zTierLabel = (+zOpt.value).toLocaleString('en-AU');
+    $('z-budget-note').textContent = '+10% licence uplift (+' + fmt(zBase * 0.10) + ' on ' + zTierLabel + ' docs / month), plus $2,100 one-off implementation.';
+
+    // NetAsset
+    const naAnnual = +$('na-tier').value || 0;
+    $('na-line').textContent = fmt(naAnnual);
+    $('na-annual-total').textContent = fmt(naAnnual);
+
+    // Totals
+    const totalAnnual = nsAnnualNet + F5_CONNECTORS_ANNUAL + zAnnual + naAnnual;
+    const totalOneOff = FUSION5_IMPL + zImpl;
+    const y1Total = totalAnnual + totalOneOff;
+
+    // 5-year: Y2 and Y3 flat, Y4 +3%, Y5 +6% on NetSuite and NetAsset (Zudello and Connectors held flat)
+    const y2 = totalAnnual;
+    const y3 = totalAnnual;
+    const y4 = nsAnnualNet * 1.03 + F5_CONNECTORS_ANNUAL + zAnnual + naAnnual * 1.03;
+    const y5 = nsAnnualNet * 1.06 + F5_CONNECTORS_ANNUAL + zAnnual + naAnnual * 1.06;
+    const fiveYear = y1Total + y2 + y3 + y4 + y5;
+
+    $('t-ns').textContent = fmt(nsAnnualNet);
+    $('t-z').textContent = fmt(zAnnual);
+    $('t-na').textContent = fmt(naAnnual);
+    $('t-annual').textContent = fmt(totalAnnual);
+    $('t-z-impl').textContent = fmt(zImpl);
+    $('t-oneoff').textContent = fmt(totalOneOff);
+    $('t-y1').textContent = fmt(y1Total);
+    $('t-5yr').textContent = fmt(fiveYear);
+  }
+
+  // Wire up inputs
+  const inputs = [
+    'ns-ga-qty','ns-va-qty','ns-so-qty','ns-crm-qty','ns-pm-qty','ns-wms-qty',
+    'z-tier','z-budget','z-vendor','na-tier'
+  ];
+  inputs.forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.addEventListener('input', recalc);
+    el.addEventListener('change', recalc);
+  });
+
+  recalc();
+})();
+</script>
+
+</body>
+</html>

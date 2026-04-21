@@ -1,0 +1,152 @@
+Hi Brendan,
+
+Thanks for the follow-ups. Responses below, in your order.
+
+
+PHASE 1
+=======
+
+1. The 12 entities.
+
+   1.  Canterbury-Hurlstone Park RSL Club: parent, trading
+   2.  CHPRSL Holdings Pty Ltd: holding
+   3.  Communal Group HQ: cost centre, shared services
+   4.  Camperdown Project Pty Ltd: subsidiary, trading
+   5.  CMNL Health and Fitness Pty Ltd: subsidiary (Anytime Fitness)
+   6.  CMNL Property Investments Pty Ltd: subsidiary, non-trading
+   7.  Camperdown Tennis Pty Ltd: corporate trustee and operator
+   8.  Camperdown Tennis Unit Trust: trust, lessee
+   9.  Bargo Sports Club: subsidiary, trading
+   10. Magpie Sports Club: subsidiary, trading
+   11. Marrickville RSL Club: subsidiary, not currently trading
+   12. CMNL Academy: subsidiary / RTO
+
+   You're right that the count of active trading legal entities
+   is smaller (seven); the remainder are the holding company,
+   the trust, the admin cost centre, and the non-trading and
+   dormant entities. All twelve still need to be configured as
+   NetSuite subsidiaries for consolidation, but the configuration
+   load is materially lighter for the non-trading ones.
+
+
+2. Zudello expense management (vs Revolut).
+
+   Your read is correct. Both integrations are vendor-supplied,
+   so Fusion5's build effort doesn't change whichever way it lands.
+   The impact is commercial:
+
+   - The Revolut licence line comes out.
+   - The Zudello licence picks up an expense management uplift
+     (Zudello to quote on Tuesday).
+   - No change to the Fusion5 fixed price.
+
+   Worth asking Zudello at the demo whether their module covers
+   corporate cards (i.e. physical cards provisioned to staff),
+   travel, and staff reimbursements at the same level as Revolut.
+   Revolut includes the cards themselves, so if that's a capability
+   gap it's worth factoring into the decision.
+
+
+3. SwiftPOS CSV instead of API: temporary.
+
+   Yes, Phase 1 only. Rationale:
+
+   - Phase 1 ingests summary journals into NetSuite (EOD or
+     intraday), which fits CSV cleanly.
+   - Phase 2 introduces the middleware and service bus pattern
+     Greg Chompff (our Integration Lead) walked through in the
+     Integration and Data session. That throttles high-volume
+     POS traffic and opens the door to richer real-time ingestion.
+   - CSV in Phase 1 also removes an API build dependency from
+     the 1 July go-live, so we're not chasing a vendor API
+     contract inside the same window as configuration and UAT.
+
+
+4. IGT integration in Phase 2.
+
+   A direct IGT integration isn't currently on the Phase 2
+   roadmap. Gaming data flows via Concilio as the extraction
+   layer (no direct IGT API available today; an IGT ABA export
+   is on their roadmap but uncommitted).
+
+   On Fusion5's history with IGT specifically, I'd rather check
+   with our gaming vertical team before committing an estimate.
+   I'll have that back to you in the next couple of days.
+
+
+PHASE 2
+=======
+
+5. Supy vs Restoke: timing and Fusion5 role.
+
+   Two quite different profiles:
+
+   - Supy: the NetSuite connection already exists, so the work
+     is configuration, data mapping and UAT. Weeks, not months.
+     Fusion5's role is solution design, configuration, test and
+     handover.
+
+   - Restoke: no existing connection. We'd build one. Typical
+     custom API integration of this shape runs four to eight
+     weeks of build and test once the spec is agreed, assuming
+     Restoke's API is documented and stable. Fusion5's role
+     would be the full lifecycle: integration design, build
+     (either direct API or via middleware), test, deploy and
+     handover.
+
+   Happy to look at Restoke's API documentation and come back
+   with a tighter estimate if that would help. Supy is
+   materially faster and cheaper to integrate, so unless
+   Restoke wins on functional grounds, the cost and time delta
+   is worth weighing.
+
+
+6. HR & Payroll staying in Humanforce and MicroPay.
+
+   Noted. That closes the payroll platform decision. MicroPay
+   into NetSuite via CSV is already in the Phase 1 scope
+   (pay-run journals through the CSV Integrator).
+
+   One question that flows from this: do you want Humanforce
+   data flowing into NetSuite in Phase 1 as well (for example,
+   headcount for cost allocations or HR-driven reporting), or
+   does it sit Phase 2? The current scope has Humanforce as
+   Phase 2, so worth confirming your preference.
+
+
+7. Concilio CSV in Phase 1.
+
+   Confirmed. Already in Phase 1 scope via the Fusion5 CSV
+   Integrator. The "manual or flat file" phrasing in the
+   current scope doc can come out; committing to CSV in
+   Phase 1 is a clean tightening.
+
+   Your framing that Concilio is how you account for gaming
+   revenue (rather than gaming-machine-specific data) is useful,
+   and I'll carry that language into the SOW.
+
+
+WHAT I'LL COME BACK ON
+======================
+
+- Fusion5's track record integrating IGT (checking with gaming
+  team; back within a couple of days).
+- Zudello expense module functional fit and pricing (from
+  Tuesday's demo, via you).
+- Humanforce Phase 1 vs Phase 2, on your read.
+
+
+FEEDS INTO v1.2 OF THE SCOPE PACK
+=================================
+
+- Payroll platform decision closed (Humanforce plus MicroPay
+  retained).
+- Concilio integration confirmed as CSV in Phase 1.
+- Potential Revolut to Zudello Expense Management swap, pending
+  Tuesday's demo.
+
+I'll issue the updated scope pack after Tuesday with these
+folded in.
+
+Thanks,
+Joel

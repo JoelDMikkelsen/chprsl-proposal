@@ -1,0 +1,99 @@
+/* ==========================================================================
+   Fusion5 brand tokens — CSS custom properties
+   Per Fusion5 Brand Guidelines v25.3.
+   ========================================================================== */
+
+:root {
+  /* --- Primary palette --- */
+  --f5-violet:          #3B1D4E;   /* Pantone 2627 C — primary brand */
+  --f5-coral:           #FF5C39;   /* Pantone 171 C  — accent, CTAs */
+  --f5-white:           #FFFFFF;
+  --f5-jet:             #3F3B42;   /* Pantone 446 C — body text */
+  --f5-rose-tea:        #A993B8;   /* Pantone 666 C */
+  --f5-camille-grey:    #3A687E;   /* Pantone 7699 C */
+  --f5-monarch-bay:     #64ABB8;   /* Pantone 7709 C */
+
+  /* --- Tints --- */
+  --f5-wisterlight:     #B7A6C4;
+  --f5-pale-vale:       #DFDAE2;
+  --f5-aprica:          #F47E5D;
+  --f5-nova-blue:       #AEDBE2;
+  --f5-steelwake:       #83B8C3;
+
+  /* --- Shades --- */
+  --f5-russian-violet:  #2B143B;
+  --f5-chinese-violet:  #806E8A;
+  --f5-crimson-ziva:    #B5452E;
+  --f5-bridlewater:     #4A808A;
+  --f5-deep-harbor:     #2B4F5E;
+
+  /* --- Semantic --- */
+  --f5-bg:              var(--f5-white);
+  --f5-bg-subtle:       #FAF8FB;
+  --f5-text:            var(--f5-jet);
+  --f5-text-muted:      color-mix(in srgb, var(--f5-jet) 70%, transparent);
+  --f5-heading:         var(--f5-violet);
+  --f5-link:            var(--f5-violet);
+  --f5-link-hover:      var(--f5-crimson-ziva);
+  --f5-accent:          var(--f5-coral);
+  --f5-border:          rgba(63,59,66,0.15);
+  --f5-border-strong:   rgba(59,29,78,0.4);
+
+  /* --- Gradients --- */
+  --f5-gradient-warm:
+    linear-gradient(135deg, var(--f5-coral) 0%, var(--f5-violet) 100%);
+
+  --f5-gradient-comet:
+    linear-gradient(90deg,
+      var(--f5-coral) 0%,
+      var(--f5-coral) 8%,
+      rgba(255,92,57,0.55) 55%,
+      rgba(255,92,57,0) 100%);
+
+  --f5-gradient-hero:
+    radial-gradient(ellipse at 20% 30%, rgba(255,92,57,0.28), transparent 45%),
+    radial-gradient(ellipse at 85% 70%, rgba(169,147,184,0.22), transparent 50%),
+    linear-gradient(135deg, var(--f5-russian-violet) 0%, var(--f5-violet) 60%, #4a2860 100%);
+
+  /* --- Typography --- */
+  --f5-font-sans:
+    "Plus Jakarta Sans", Calibri, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --f5-weight-light:    300;
+  --f5-weight-regular:  400;
+  --f5-weight-semibold: 600;
+  --f5-weight-bold:     700;
+
+  --f5-text-xs:         0.75rem;
+  --f5-text-sm:         0.875rem;
+  --f5-text-base:       1rem;
+  --f5-text-lg:         1.125rem;
+  --f5-text-xl:         1.25rem;
+  --f5-text-2xl:        1.5rem;
+  --f5-text-3xl:        2rem;
+  --f5-text-4xl:        clamp(2rem, 4vw, 2.5rem);
+  --f5-text-5xl:        clamp(2.5rem, 6vw, 3.5rem);
+  --f5-text-6xl:        clamp(3rem, 8vw, 6rem);
+
+  --f5-leading-tight:   1.1;
+  --f5-leading-snug:    1.3;
+  --f5-leading-normal:  1.5;
+  --f5-leading-relaxed: 1.6;
+
+  --f5-tracking-tight:  -0.02em;
+  --f5-tracking-normal: 0;
+  --f5-tracking-wide:   0.08em;
+
+  /* --- Spacing, radius, elevation --- */
+  --f5-radius-sm:       6px;
+  --f5-radius-md:       12px;
+  --f5-radius-lg:       24px;
+  --f5-radius-xl:       36px;
+  --f5-radius-pill:     999px;
+
+  --f5-shadow-sm:       0 2px 6px rgba(59,29,78,0.08);
+  --f5-shadow-md:       0 8px 20px rgba(59,29,78,0.12);
+  --f5-shadow-lg:       0 20px 40px rgba(59,29,78,0.18);
+  --f5-shadow-coral:    0 8px 20px rgba(255,92,57,0.35);
+}
