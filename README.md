@@ -13,7 +13,24 @@ npm run preview   # preview the production build locally
 
 ## Deployment
 
-Auto-deployed to Netlify from `main` via GitHub integration. Build command and publish directory are set in `netlify.toml`.
+**Live:** https://chprsl-proposal.netlify.app
+**Admin:** https://app.netlify.com/projects/chprsl-proposal
+**GitHub:** https://github.com/JoelDMikkelsen/chprsl-proposal
+
+The first production deploy was pushed via the Netlify CLI. Continuous deployment from `main` is NOT yet wired up; the OAuth handshake between Netlify and GitHub is an interactive step.
+
+**To enable continuous deployment (one-off, 30 seconds):**
+
+1. Open https://app.netlify.com/projects/chprsl-proposal
+2. Site configuration → Build & deploy → Link site to Git
+3. Choose GitHub → authorise the Netlify app → select `JoelDMikkelsen/chprsl-proposal` → main branch
+4. Build settings are pre-populated from `netlify.toml` (`npm run build`, publish `dist`)
+
+Until that's done, deploy manually with:
+
+```bash
+netlify deploy --build --prod
+```
 
 ## Repo layout
 

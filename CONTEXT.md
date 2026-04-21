@@ -193,7 +193,21 @@ npm run build    # tsc -b && vite build → outputs to dist/
 npm run preview  # preview the production build locally
 ```
 
-Deployment is via Netlify, auto-triggered by push to `main`.
+## 11. Deployment
+
+- **Live site:** https://chprsl-proposal.netlify.app
+- **Netlify admin:** https://app.netlify.com/projects/chprsl-proposal (account: Eagle Gaming)
+- **GitHub repo:** https://github.com/JoelDMikkelsen/chprsl-proposal
+
+The first production deploy was pushed via `netlify deploy --build --prod` from the CLI. **Continuous deployment from `main` is not yet wired up** because the Netlify→GitHub OAuth handshake needs an interactive browser step.
+
+To enable auto-deploys (one-off, roughly 30 seconds via the Netlify dashboard): see README.md § Deployment.
+
+Until that happens, deploy manually with:
+
+```bash
+netlify deploy --build --prod
+```
 
 ---
 
