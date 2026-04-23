@@ -5,8 +5,8 @@
  *   Phase 1: MVP on 1 July 2026 — Fusion5 CSV Integrator + SwiftPOS,
  *            Concilio, Micropay, with NSAW activated as data layer.
  *   Phase 2: Campfire middleware replaces the CSV Integrator and adds
- *            Beonic Traffic Counters. Indicative $92K-$154K (ex. GST,
- *            ±25%, central $123K).
+ *            Beonic Traffic Counters. Indicative $84K-$140K (ex. GST,
+ *            ±25%, central $112K — 1% above the Phase 3 central).
  *   Phase 3: Campfire scope expands with Stripe, IGT, Humanforce,
  *            Circle Scan, Intrac, eSkilled. Indicative $83K-$139K
  *            (ex. GST, ±25%, central $111K).
@@ -106,7 +106,7 @@ const PHASES: Record<Phase, PhaseSpec> = {
     etlSub: 'Listener · throttle · transform',
     sources: [...P1_SOURCES, ...P2_NEW_SOURCES],
     splitHint: 'Summary + detailed split',
-    budget: { low: 92, high: 154, central: 123 },
+    budget: { low: 84, high: 140, central: 112 },
   },
   3: {
     toggle: 'Phase 3',
