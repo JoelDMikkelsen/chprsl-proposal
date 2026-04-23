@@ -1,0 +1,79 @@
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0;
+  margin-top: 2rem;
+  border-radius: var(--f5-radius-md);
+  overflow: hidden;
+}
+
+@media (max-width: 800px) {
+  .timeline { grid-template-columns: 1fr; }
+}
+
+.phase {
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  padding: 1.25rem;
+  position: relative;
+}
+
+.phase:not(:last-child) { border-right: none; }
+
+@media (max-width: 800px) {
+  .phase:not(:last-child) {
+    border-right: 1px solid var(--f5-border);
+    border-bottom: none;
+  }
+}
+
+.phase-num {
+  font-size: 0.75rem;
+  color: var(--f5-coral);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.phase-name {
+  color: var(--f5-violet);
+  font-weight: 700;
+  font-size: 1.125rem;
+  margin: 0.3rem 0 0.25rem;
+}
+
+.phase-weeks {
+  font-size: 0.8125rem;
+  color: var(--f5-coral);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.phase-dur {
+  font-size: 0.875rem;
+  color: var(--f5-chinese-violet);
+}
+
+.delivery-tiles {
+  margin-top: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .delivery-tiles { grid-template-columns: 1fr; }
+}
+
+.delivery-tiles h4 {
+  color: var(--f5-coral);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.delivery-tiles p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9375rem;
+}

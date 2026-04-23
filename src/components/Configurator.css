@@ -1,0 +1,305 @@
+.configurator { background: var(--f5-bg-subtle); }
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .config-grid { grid-template-columns: 1fr; }
+}
+
+.config-panels {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.panel {
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  border-radius: var(--f5-radius-lg);
+  overflow: hidden;
+}
+
+/* Phase-2 licensing variant — subtle accent to distinguish from Phase 1
+   panels and signal it isn't rolling into the Year 1 totals. */
+.panel--p2 {
+  border-style: dashed;
+  border-color: rgba(59, 29, 78, 0.25);
+  background: color-mix(in srgb, var(--f5-coral) 4%, var(--f5-white));
+}
+
+.panel--p2 .panel-head {
+  background: transparent;
+}
+
+/* The panel is a <details>; the summary becomes the clickable head.
+   Remove default marker, add our own chevron. */
+.panel > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.panel > summary::-webkit-details-marker { display: none; }
+
+.panel-head {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--f5-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: relative;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.panel-head:hover { background: var(--f5-bg-subtle); }
+
+/* Chevron indicator. Rotates when the panel is open. */
+.panel-head::after {
+  content: "";
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--f5-chinese-violet);
+  border-bottom: 2px solid var(--f5-chinese-violet);
+  transform: rotate(-45deg);
+  transition: transform 0.2s ease;
+  margin-left: 0.25rem;
+}
+
+.panel[open] .panel-head::after {
+  transform: rotate(45deg);
+}
+
+/* When the panel is closed, the head has no bottom border. */
+.panel:not([open]) .panel-head { border-bottom: 0; }
+
+.panel-head h3 { margin: 0; color: var(--f5-violet); }
+
+.panel-head .sub {
+  font-size: 0.875rem;
+  color: var(--f5-chinese-violet);
+}
+
+.panel-body {
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel-subhead {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f5-chinese-violet);
+  font-weight: 700;
+  margin: 0.25rem 0 -0.25rem;
+}
+
+.panel-subhead + .panel-subhead,
+.row + .panel-subhead { margin-top: 1rem; }
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed var(--f5-border);
+}
+
+.row:last-child { border-bottom: none; }
+
+.row.total {
+  grid-template-columns: 1fr auto;
+  font-weight: 700;
+  color: var(--f5-violet);
+  border-top: 2px solid var(--f5-violet);
+  border-bottom: none;
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+  font-size: 1.0625rem;
+}
+
+.row.subtotal {
+  border-top: 2px solid var(--f5-border);
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+}
+
+.row.row-dashed {
+  border-top: 1px dashed var(--f5-border);
+  padding-top: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.row label { font-weight: 500; font-size: 0.9375rem; }
+
+.row .note {
+  font-size: 0.75rem;
+  color: var(--f5-chinese-violet);
+  font-weight: 400;
+  display: block;
+  margin-top: 0.2rem;
+}
+
+.row input[type="number"],
+.row select {
+  border: 1px solid var(--f5-border);
+  border-radius: var(--f5-radius-sm);
+  padding: 0.4rem 0.55rem;
+  font-family: var(--f5-font-sans);
+  font-size: 0.9375rem;
+  color: var(--f5-jet);
+  background: var(--f5-white);
+  min-width: 78px;
+  text-align: right;
+}
+
+.row input[type="number"]:focus,
+.row select:focus {
+  outline: 2px solid var(--f5-coral);
+  outline-offset: 1px;
+  border-color: var(--f5-coral);
+}
+
+.row select {
+  min-width: 130px;
+  text-align: left;
+}
+
+.row .unit {
+  font-size: 0.8125rem;
+  color: var(--f5-chinese-violet);
+  text-align: right;
+  min-width: 110px;
+}
+
+.row .line {
+  font-weight: 600;
+  text-align: right;
+  min-width: 110px;
+  color: var(--f5-violet);
+}
+
+.row .toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.row .toggle input {
+  width: 38px;
+  height: 22px;
+  appearance: none;
+  background: var(--f5-wisterlight);
+  border-radius: 999px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.row .toggle input::after {
+  content: "";
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  background: white;
+  border-radius: 50%;
+  transition: left 0.2s;
+}
+
+.row .toggle input:checked { background: var(--f5-coral); }
+.row .toggle input:checked::after { left: 19px; }
+
+/* Totals panel (sticky on desktop) */
+
+.totals-panel {
+  position: sticky;
+  top: 1.5rem;
+  background: var(--f5-violet);
+  color: var(--f5-white);
+  border-radius: var(--f5-radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--f5-shadow-lg);
+}
+
+.totals-panel h3 {
+  color: var(--f5-white);
+  margin-bottom: 0.25rem;
+}
+
+.totals-panel .sub {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.totals-panel .total-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  font-size: 0.9375rem;
+}
+
+.totals-panel .total-line:last-child { border-bottom: none; }
+.totals-panel .total-line .lab { color: rgba(255, 255, 255, 0.85); }
+.totals-panel .total-line .val { font-weight: 600; }
+
+.totals-panel .grand {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid var(--f5-coral);
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.totals-panel .grand .val {
+  color: var(--f5-coral);
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+/* Discount line inside the totals panel. */
+.totals-panel .discount-line .lab {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.8125rem;
+  font-style: italic;
+}
+.totals-panel .discount-line .val {
+  color: var(--f5-coral);
+  font-weight: 600;
+}
+
+/* Subdued inline note on a totals-panel line (e.g. "Year 1 offset"). */
+.totals-panel .total-line .sub-note {
+  display: inline;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.75rem;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.totals-panel .fine {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.5;
+}
+
+@media print {
+  .totals-panel { display: none; }
+  .config-grid { grid-template-columns: 1fr; }
+  .panel { break-inside: avoid; }
+}

@@ -1,0 +1,64 @@
+.scope-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 800px) {
+  .scope-grid { grid-template-columns: 1fr; }
+}
+
+.scope-block {
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  border-radius: var(--f5-radius-md);
+  padding: 1.5rem;
+}
+
+.scope-block.out { background: var(--f5-bg-subtle); }
+
+.scope-block h4 {
+  color: var(--f5-violet);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.scope-block.out h4 { color: var(--f5-jet); }
+
+.scope-block h4 .pip {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  background: var(--f5-coral);
+}
+
+.scope-block.out h4 .pip { background: var(--f5-chinese-violet); }
+
+.scope-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scope-block li {
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+  font-size: 0.9375rem;
+  color: var(--f5-jet);
+}
+
+.scope-block li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.85rem;
+  width: 12px;
+  height: 2px;
+  background: var(--f5-coral);
+  border-radius: 1px;
+}
+
+.scope-block.out li::before { background: var(--f5-chinese-violet); }

@@ -1,0 +1,56 @@
+.export-root {
+  position: fixed;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 999;
+}
+
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--f5-radius-pill);
+  background: rgba(59, 29, 78, 0.85);
+  color: var(--f5-white);
+  font-family: var(--f5-font-sans);
+  font-size: 0.8125rem;
+  font-weight: var(--f5-weight-semibold);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: var(--f5-shadow-md);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.15s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.export-btn:hover {
+  background: var(--f5-violet);
+  transform: translateY(-1px);
+  box-shadow: var(--f5-shadow-lg);
+}
+
+.export-btn:active {
+  transform: translateY(0);
+}
+
+.export-btn svg { flex-shrink: 0; }
+
+/* Hide on print — no use for it on a printed page. */
+@media print {
+  .export-root { display: none; }
+}
+
+/* Tuck away on narrow screens so it doesn't obscure hero text. */
+@media (max-width: 600px) {
+  .export-root {
+    top: auto;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  .export-btn {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.75rem;
+  }
+}

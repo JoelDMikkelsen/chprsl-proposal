@@ -1,0 +1,551 @@
+/* ==========================================================================
+   Architecture — horizontal three-panel flow.
+   Layout pattern adapted from KleanKing's ArchitectureDiagram. Three main
+   panels side by side (ETL, NetSuite, Vendor APIs). Humanforce is a small
+   Phase-2-only card below NetSuite. All arrows are simple straight lines
+   landing on node edges; no diagonals, no curves, no per-arrow labels.
+   ========================================================================== */
+
+/* --- Phase toggle ------------------------------------------------------ */
+
+.arch-phasetoggle {
+  display: inline-flex;
+  gap: 0.25rem;
+  margin: 1.5rem 0 0.75rem;
+  padding: 0.25rem;
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  border-radius: var(--f5-radius-pill);
+  box-shadow: var(--f5-shadow-sm);
+}
+
+.arch-phasebtn {
+  border: 0;
+  background: transparent;
+  color: var(--f5-chinese-violet);
+  font-family: var(--f5-font-sans);
+  font-size: 0.875rem;
+  font-weight: var(--f5-weight-semibold);
+  padding: 0.55rem 1rem;
+  border-radius: var(--f5-radius-pill);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.arch-phasebtn:hover { color: var(--f5-violet); }
+
+.arch-phasebtn.is-active {
+  background: var(--f5-violet);
+  color: var(--f5-white);
+}
+
+/* --- Stage ------------------------------------------------------------- */
+
+.arch-stage {
+  position: relative;
+  margin-top: 0.75rem;
+  padding: 2rem 1.75rem 2rem;
+  border-radius: var(--f5-radius-lg);
+  background:
+    radial-gradient(ellipse at 10% 0%, rgba(255, 92, 57, 0.06), transparent 60%),
+    radial-gradient(ellipse at 90% 100%, rgba(169, 147, 184, 0.08), transparent 55%),
+    var(--f5-white);
+  box-shadow: var(--f5-shadow-sm);
+}
+
+/* --- Three-panel row --------------------------------------------------- */
+
+.arch-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.5fr) minmax(0, 0.95fr);
+  gap: 3rem;
+  align-items: stretch;
+}
+
+/* --- Tag chip ---------------------------------------------------------- */
+
+.arch-tag {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: var(--f5-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f5-coral);
+  margin-bottom: 0.35rem;
+}
+
+.arch-tag--onviolet { color: rgba(255, 255, 255, 0.85); }
+
+/* --- ETL panel --------------------------------------------------------- */
+
+.arch-etl {
+  padding: 1.25rem;
+  border-radius: var(--f5-radius-lg);
+  background: var(--f5-white);
+  border: 1px solid rgba(59, 29, 78, 0.14);
+  box-shadow: var(--f5-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.arch-etl__label {
+  font-weight: var(--f5-weight-bold);
+  color: var(--f5-violet);
+  font-size: 1.25rem;
+  line-height: 1.15;
+}
+
+.arch-etl__sub {
+  font-size: 0.8125rem;
+  color: var(--f5-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.arch-etl__sources {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: 0.5rem;
+}
+
+.arch-etl__sourcetag {
+  font-size: 0.6875rem;
+  font-weight: var(--f5-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f5-chinese-violet);
+  margin-bottom: 0.1rem;
+}
+
+.arch-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.arch-chip {
+  display: inline-block;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--f5-radius-pill);
+  background: var(--f5-bg-subtle);
+  border: 1px solid var(--f5-border);
+  color: var(--f5-violet);
+  font-size: 0.8125rem;
+  font-weight: var(--f5-weight-semibold);
+  line-height: 1.2;
+}
+
+.arch-chip--new {
+  background: color-mix(in srgb, var(--f5-coral) 12%, transparent);
+  border-color: color-mix(in srgb, var(--f5-coral) 40%, transparent);
+  color: var(--f5-crimson-ziva);
+}
+
+.arch-chip--mini {
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+.arch-etl__legend {
+  font-size: 0.6875rem;
+  color: var(--f5-text-muted);
+  letter-spacing: 0.02em;
+  margin-top: 0.1rem;
+}
+
+/* Discount checkbox (applies to P2/P3 budget ranges only). */
+.arch-discount {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0.5rem 0 0.25rem;
+  padding: 0.55rem 0.85rem;
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  border-radius: var(--f5-radius-md);
+  font-size: 0.875rem;
+  color: var(--f5-text);
+  max-width: 860px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.arch-discount input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--f5-coral);
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.arch-discount strong { color: var(--f5-violet); }
+
+/* Budget-range callout (under phase toggle, P2 and P3 only). */
+.arch-budget {
+  margin: 0.5rem 0 1rem;
+  padding: 0.75rem 0.95rem;
+  background: color-mix(in srgb, var(--f5-coral) 8%, transparent);
+  border-left: 3px solid var(--f5-coral);
+  border-radius: 0 var(--f5-radius-sm) var(--f5-radius-sm) 0;
+  font-size: 0.875rem;
+  color: var(--f5-text);
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.arch-budget strong { color: var(--f5-violet); }
+
+.arch-detailbtn {
+  flex-shrink: 0;
+  border: 1px solid var(--f5-coral);
+  background: var(--f5-white);
+  color: var(--f5-crimson-ziva);
+  font-family: var(--f5-font-sans);
+  font-size: 0.8125rem;
+  font-weight: var(--f5-weight-semibold);
+  padding: 0.45rem 0.9rem;
+  border-radius: var(--f5-radius-pill);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.arch-detailbtn:hover {
+  background: var(--f5-coral);
+  color: var(--f5-white);
+  transform: translateY(-1px);
+}
+
+/* --- Sub-card (used for sources inside ETL, vendors inside right) ----- */
+
+.arch-subcard {
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--f5-radius-md);
+  background: var(--f5-bg-subtle);
+  border: 1px solid var(--f5-border);
+}
+
+.arch-subcard__label {
+  font-weight: var(--f5-weight-semibold);
+  color: var(--f5-violet);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+
+.arch-subcard__sub {
+  font-size: 0.75rem;
+  color: var(--f5-text-muted);
+  margin-top: 0.1rem;
+}
+
+/* --- NetSuite panel ---------------------------------------------------- */
+
+.arch-netsuite {
+  position: relative;
+  padding: 1.5rem 1.25rem 1.25rem;
+  border-radius: var(--f5-radius-lg);
+  color: var(--f5-white);
+  background: linear-gradient(
+    135deg,
+    var(--f5-russian-violet) 0%,
+    var(--f5-violet) 70%,
+    #4a2860 100%
+  );
+  box-shadow: var(--f5-shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 380px;
+}
+
+.arch-netsuite__head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.arch-netsuite__label {
+  font-size: 1.75rem;
+  font-weight: var(--f5-weight-bold);
+  color: var(--f5-white);
+  line-height: 1.1;
+  letter-spacing: var(--f5-tracking-tight);
+}
+
+.arch-netsuite__sub {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* --- Inside blocks ----------------------------------------------------- */
+
+.arch-insideblock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.arch-insideblock__tag {
+  font-size: 0.6875rem;
+  font-weight: var(--f5-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.arch-insidepills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.arch-insidepill {
+  padding: 0.55rem 0.75rem;
+  border-radius: var(--f5-radius-md);
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.arch-insidepill__label {
+  font-weight: var(--f5-weight-semibold);
+  color: var(--f5-white);
+  font-size: 0.9375rem;
+}
+
+.arch-insidepill__sub {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.1rem;
+}
+
+.arch-insidepill--committed {
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: inset 3px 0 0 var(--f5-coral);
+}
+
+.arch-insidepill--option {
+  border-style: dashed;
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.arch-insidepill--option .arch-insidepill__label { color: rgba(255, 255, 255, 0.78); }
+.arch-insidepill--option .arch-insidepill__sub   { color: rgba(255, 255, 255, 0.55); }
+
+/* --- NSAW band --------------------------------------------------------- */
+
+.arch-nsaw {
+  margin-top: auto;
+  padding: 0.75rem 0.875rem;
+  border-radius: var(--f5-radius-md);
+  background: rgba(100, 171, 184, 0.22);
+  border: 1px solid rgba(100, 171, 184, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.arch-nsaw__label {
+  font-weight: var(--f5-weight-semibold);
+  color: var(--f5-white);
+  font-size: 0.9375rem;
+}
+
+/* --- Vendor APIs panel (right) ---------------------------------------- */
+
+.arch-vendors {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  justify-content: space-between;
+}
+
+.arch-vendors__tag {
+  font-size: 0.6875rem;
+  font-weight: var(--f5-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f5-coral);
+  margin-bottom: 0.25rem;
+}
+
+.arch-vendor {
+  padding: 0.85rem 1rem;
+  border-radius: var(--f5-radius-md);
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  box-shadow: var(--f5-shadow-sm);
+  text-align: center;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.arch-vendor__label {
+  font-weight: var(--f5-weight-bold);
+  color: var(--f5-violet);
+  font-size: 1.0625rem;
+  line-height: 1.15;
+}
+
+.arch-vendor__sub {
+  font-size: 0.8125rem;
+  color: var(--f5-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* --- Humanforce (Phase 2, centred below NetSuite) --------------------- */
+
+.arch-humanforcerow {
+  display: flex;
+  justify-content: center;
+  margin-top: 2.5rem;
+}
+
+.arch-humanforce {
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--f5-radius-md);
+  background: var(--f5-white);
+  border: 1px solid var(--f5-border);
+  box-shadow: var(--f5-shadow-sm);
+  text-align: center;
+  min-width: 200px;
+}
+
+.arch-humanforce__label {
+  font-weight: var(--f5-weight-bold);
+  color: var(--f5-violet);
+  font-size: 1.0625rem;
+  line-height: 1.15;
+}
+
+.arch-humanforce__sub {
+  font-size: 0.8125rem;
+  color: var(--f5-text-muted);
+  margin-top: 0.15rem;
+}
+
+/* --- Split hint (text between ETL and NetSuite) ----------------------- */
+
+.arch-splithint {
+  text-align: center;
+  font-size: 0.7rem;
+  font-weight: var(--f5-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--f5-chinese-violet);
+  margin-top: 1rem;
+}
+
+/* --- Arrow overlay ----------------------------------------------------- */
+
+.arch-arrows {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.arch-line {
+  fill: none;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.9s ease-out;
+}
+
+.arch-edge--api .arch-line {
+  stroke: var(--f5-monarch-bay);
+  color: var(--f5-monarch-bay);
+}
+
+.arch-edge--etl .arch-line {
+  stroke: var(--f5-coral);
+  color: var(--f5-coral);
+}
+
+.arch-stage--in .arch-line { stroke-dashoffset: 0; }
+
+.arch-stage--in .arch-edge--delay0 .arch-line { transition-delay: 0.0s; }
+.arch-stage--in .arch-edge--delay1 .arch-line { transition-delay: 0.14s; }
+.arch-stage--in .arch-edge--delay2 .arch-line { transition-delay: 0.28s; }
+.arch-stage--in .arch-edge--delay3 .arch-line { transition-delay: 0.42s; }
+
+/* --- Legend ------------------------------------------------------------ */
+
+.arch-legend {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--f5-text-muted);
+}
+
+.arch-legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.arch-legend__dot {
+  width: 14px;
+  height: 14px;
+  border-radius: var(--f5-radius-sm);
+  border: 1px solid transparent;
+  display: inline-block;
+}
+
+.arch-legend__dot--committed {
+  background: var(--f5-violet);
+  box-shadow: inset 3px 0 0 var(--f5-coral);
+}
+
+.arch-legend__dot--option {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px dashed var(--f5-chinese-violet);
+}
+
+.arch-legend__dot--api { background: var(--f5-monarch-bay); }
+.arch-legend__dot--etl { background: var(--f5-coral); }
+
+/* --- Responsive -------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .arch-row {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .arch-netsuite { min-height: auto; }
+
+  /* On narrow screens the panels stack, so the horizontal SVG arrows
+     don't map onto anything sensible. Hide them; the node ordering and
+     the prose above the diagram carry the flow. */
+  .arch-arrows { display: none; }
+  .arch-splithint { margin-top: 0.5rem; }
+}
+
+/* --- Reduced motion ---------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-line,
+  .arch-phasebtn {
+    transition: none;
+  }
+  .arch-line { stroke-dashoffset: 0; }
+}

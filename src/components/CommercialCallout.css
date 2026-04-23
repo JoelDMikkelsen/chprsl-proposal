@@ -1,0 +1,31 @@
+.callout {
+  background: var(--f5-violet);
+  color: var(--f5-white);
+  border-radius: var(--f5-radius-lg);
+  padding: 2rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.callout h3 {
+  color: var(--f5-white);
+  margin-bottom: 0.75rem;
+}
+
+.callout .comet-bg {
+  position: absolute;
+  right: -10%;
+  top: -20%;
+  width: 60%;
+  height: 140%;
+  background: var(--f5-gradient-comet);
+  opacity: 0.25;
+  transform: rotate(-20deg);
+  border-radius: 999px;
+}
+
+.callout-body {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+}

@@ -1,0 +1,32 @@
+.listen-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+}
+
+.listen-table th,
+.listen-table td {
+  text-align: left;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--f5-border);
+  vertical-align: top;
+}
+
+.listen-table thead th {
+  background: var(--f5-violet);
+  color: var(--f5-white);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.listen-table thead th:first-child { border-top-left-radius: 12px; }
+.listen-table thead th:last-child { border-top-right-radius: 12px; }
+
+.listen-table tbody tr:hover { background: var(--f5-bg-subtle); }
+
+.listen-table td:first-child {
+  color: var(--f5-crimson-ziva);
+  font-weight: 500;
+}

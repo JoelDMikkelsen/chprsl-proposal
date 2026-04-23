@@ -1,0 +1,32 @@
+.statbar {
+  background: var(--f5-violet);
+  color: var(--f5-white);
+  padding: 2.5rem 1.5rem;
+}
+
+.statbar .stats {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 800px) {
+  .statbar .stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.stat .num {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--f5-coral);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.stat .lab {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+}
